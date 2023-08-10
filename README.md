@@ -1,3 +1,5 @@
+[![Docker Build](https://github.com/ai-dock/jupyter-pytorch/actions/workflows/docker-image.yml/badge.svg)](https://github.com/ai-dock/jupyter-pytorch/actions/workflows/docker-image.yml)
+
 # Jupyter PyTorch
 
 Run Jupyter lab or notebook with Python, iPython and PyTorch included.
