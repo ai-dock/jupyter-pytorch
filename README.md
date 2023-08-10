@@ -1,6 +1,6 @@
 # Jupyter PyTorch
 
-Run Jupyter lab or notebook with a Python, iPython and Pytorch included.
+Run Jupyter lab or notebook with Python, iPython and PyTorch included.
 
 ## About PyTorch
 
