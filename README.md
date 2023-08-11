@@ -107,10 +107,12 @@ If you are unfamiliar with port forwarding then you should read the guides [here
 | --------------------- | ----------- |
 | `GPU_COUNT`           | Limit the number of available GPUs |
 | `JUPYTER_MODE`        | `lab` (default), `notebook` |
+| `JUPYTER_PORT`        | Set an alternative port (default `8888`) |
 | `JUPYTER_TOKEN`       | Manually set your password |
 | `PROVISIONING_SCRIPT` | URL of a remote script to execute on init. See [note](#provisioning-script). |
 | `RCLONE_*`            | Rclone configuration - See [rclone documentation](https://rclone.org/docs/#config-file) |
 | `SKIP_ACL`            | Set `true` to skip modifying workspace ACL |
+| `SSH_PORT`            | Set a non-standard port for SSH (default `22`) |
 | `SSH_PUBKEY`          | Your public key for SSH |
 | `WORKSPACE`           | A volume path. Defaults to `/workspace/` |
 
@@ -136,7 +138,7 @@ If you are running locally you may instead opt to mount an executable script at 
 
 ## Software Management
 
-A small software collection is installed by apt-get. This is mostly to provide basic functionality, but also includes `openssh-server` as the OS vendor is likely to be first to patch any security issues.
+A small software collection is installed by apt-get to provide basic utility.
 
 All other software is installed into its own environment by `micromamba`, which is a drop-in replacement for conda/mamba. Read more about it [here](https://mamba.readthedocs.io/en/latest/user_guide/micromamba.html).
 
@@ -144,10 +146,10 @@ Micromamba environments are particularly useful where several software packages 
 
 ### Installed Micromamba Environments
 
-| Environment    | Packages / Rationale |
+| Environment    | Packages |
 | -------------- | ----------------------------------------- |
 | `base`         | micromamba's base environment |
-| `system`       | `supervisord`, `rclone` - latest versions |
+| `system`       | `supervisord`, `openssh`, `rclone` |
 | `jupyter`      | `jupyter` |
 | `python_[ver]` | `python` |
 
@@ -199,7 +201,7 @@ All processes are managed by [supervisord](https://supervisord.readthedocs.io/en
 
 The jupyter server will launch a `lab` instance unless you specify `JUPYTER_MODE=notebook`.
 
-Jupyter server will listen on port `8888`.
+Jupyter server will listen on `port 8888` unless you have specified an alternative with the `JUPYTER_PORT` environment variable.
 
 A python kernel will be installed coresponding with the python version of the image.
 
@@ -208,6 +210,8 @@ Jupyter's official documentation is available at https://jupyter.org/
 ### SSHD
 
 A SSH server will be started if at least one valid public key is found inside the running container in the file `/root/.ssh/authorized_keys`
+
+The server will bind to `port 22` unless you specify variable `SSH_PORT`.
 
 There are several ways to get your keys to the container.
 

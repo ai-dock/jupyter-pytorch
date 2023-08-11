@@ -32,6 +32,15 @@ jobs:
             python: "3.11"
     steps:
       -
+        name: Free Space
+        run: |
+          df -h
+          rm -rf /usr/share/dotnet
+          rm -rf /opt/ghc
+          rm -rf /usr/local/share/boost
+          rm -rf "$AGENT_TOOLSDIRECTORY"
+          df -h
+      -
         name: Env Setter
         run: |
           echo "PACKAGE_NAME=${GITHUB_REPOSITORY,,}" >> ${GITHUB_ENV}
