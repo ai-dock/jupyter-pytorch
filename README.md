@@ -97,14 +97,20 @@ This is fine if you are working locally but can be **dangerous for remote connec
 
 _**SSH Tunnel**_
 
-This is the preferred method. You will only need to expose `port 22` (SSH) which can then be used with port forwarding to allow **secure** connections to your services.
+You will only need to expose `port 22` (SSH) which can then be used with port forwarding to allow **secure** connections to your services.
 
 If you are unfamiliar with port forwarding then you should read the guides [here](https://link.ai-dock.org/guide-ssh-tunnel-do-a) and [here](https://link.ai-dock.org/guide-ssh-tunnel-do-b).
+
+_**Cloudflare Tunnel**_
+
+You can use the included `cloudflared` service to make secure connections without having to expose any ports to the public internet. See more below.
 
 ## Environment Variables
 
 | Variable              | Description |
 | --------------------- | ----------- |
+| `CF_TUNNEL_TOKEN`     | Cloudflare zero trust tunnel token - See [documentation](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/). |
+| `CF_QUICK_TUNNELS`    | Create ephemeral Cloudflare tunnels for web services (default `false`) |
 | `GPU_COUNT`           | Limit the number of available GPUs |
 | `JUPYTER_MODE`        | `lab` (default), `notebook` |
 | `JUPYTER_PORT`        | Set an alternative port (default `8888`) |
@@ -207,6 +213,24 @@ A python kernel will be installed coresponding with the python version of the im
 
 Jupyter's official documentation is available at https://jupyter.org/ 
 
+### Cloudflared
+
+The Cloudflare tunnel daemon will start if you have provided a token with the `CF_TUNNEL_TOKEN` environment variable.
+
+This service allows you to connect to your local services via https without exposing any ports.
+
+You can also create a private network to enable remote connecions to the container at its local address (`172.x.x.x`) if your local machine is running a Cloudflare WARP client.
+
+If you do not wish to provide a tunnel token, you could enable `CF_QUICK_TUNNELS` which will create a throwaway tunnel for your web services.
+
+Full documentation for Cloudflare tunnels is [here](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/).
+
+>[!NOTE]  
+>_Cloudflared is included so that secure networking is available in all cloud environments._
+
+>[!WARNING]  
+>You should only provide tunnel tokens in secure cloud environments.
+
 ### SSHD
 
 A SSH server will be started if at least one valid public key is found inside the running container in the file `/root/.ssh/authorized_keys`
@@ -295,6 +319,9 @@ Some ports need to be exposed for the services to run or for certain features of
 - In Container Name enter `ghcr.io/ai-dock/jupyter-pytorch:latest`
 - In Registry Username enter `x` (Paperspace bug)
 - In Command enter `init.sh WORKSPACE=/notebooks`
+
+>[!WARNING]  
+>Do not attempt to use tunnels to circumvent Paperspace restrictions (eg. SSH & private networking) - You will lose your account.
 
 ---
 
