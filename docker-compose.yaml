@@ -8,9 +8,9 @@ services:
         IMAGE_BASE: ${IMAGE_BASE}
         PYTORCH_VERSION: ${PYTORCH_VERSION}
       tags:
-        - "ghcr.io/ai-dock/pytorch:${IMAGE_TAG}"
+        - "ghcr.io/ai-dock/jupyter-pytorch:${IMAGE_TAG}"
         
-    image: ghcr.io/ai-dock/pytorch:${IMAGE_TAG}
+    image: ghcr.io/ai-dock/jupyter-pytorch:${IMAGE_TAG}
     
     security_opt:
       # For Rclone mount
