@@ -6,7 +6,6 @@ services:
       context: ./build
       args:
         IMAGE_BASE: ${IMAGE_BASE}
-        PYTORCH_VERSION: ${PYTORCH_VERSION}
       tags:
         - "ghcr.io/ai-dock/jupyter-pytorch:${IMAGE_TAG}"
         
