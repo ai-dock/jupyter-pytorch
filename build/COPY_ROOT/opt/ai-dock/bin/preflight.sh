@@ -1,12 +1,13 @@
-#!/bin/bash
+#!/bin/false
 
-function main() {
-    write_bashrc
+# This file will be sourced in init.sh
+
+function preflight_main() {
+    preflight_do_something
 }
 
-function write_bashrc() {
-    a='alias jupyter="micromamba run -n jupyter jupyter"'
-    printf "%s\n" "$a" >> /root/.bashrc
+function preflight_do_something() {
+    printf "Empty preflight.sh...\n"
 }
 
-main "$@"; exit
+preflight_main "$@"
