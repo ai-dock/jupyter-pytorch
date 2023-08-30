@@ -20,7 +20,7 @@ COPY ./COPY_ROOT/ /
 # Use build scripts to ensure we can build all targets from one Dockerfile in a single layer.
 # Don't put anything heavy in here - We can use multi-stage building above if necessary.
 
-RUN bash -c /opt/ai-dock/bin/build/layer0/init.sh
+RUN /opt/ai-dock/bin/build/layer0/init.sh
 
 # Keep init.sh as-is and place additional logic in /opt/ai-dock/bin/preflight.sh
 CMD ["init.sh"]

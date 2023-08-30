@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Must exit and fail to build if any command fails
-set -e
+set -eo pipefail
 
 kernel_path=/usr/local/share/jupyter/kernels/
 
@@ -11,7 +11,7 @@ main() {
 }
 
 install_jupyter() {
-    $MAMBA_CREATE -n jupyter -c conda-forge python=${MAMBA_BASE_PYTHON_VERSION} && \
+    $MAMBA_CREATE -n jupyter -c conda-forge python=${MAMBA_BASE_PYTHON_VERSION}
     micromamba -n jupyter install -c conda-forge -y \
         jupyter \
         jupyterlab \
