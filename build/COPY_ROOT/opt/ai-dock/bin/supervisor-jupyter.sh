@@ -1,6 +1,11 @@
 #!/bin/bash
 
-trap 'kill $(jobs -p)' EXIT
+trap cleanup EXIT
+
+function cleanup() {
+    kill $(jobs -p) > /dev/null 2>&1
+    rm /run/http_ports/$PORT > /dev/null 2>&1
+}
 
 if [[ -z $JUPYTER_MODE || ! "$JUPYTER_MODE" = "notebook" ]]; then
     JUPYTER_MODE="lab"
@@ -15,11 +20,13 @@ if [[ -n $JUPYTER_PASSWORD ]]; then
     export JUPYTER_TOKEN="${JUPYTER_PASSWORD}"
 fi
 
-printf "Starting Jupyter %s...\n" $JUPYTER_MODE
+PORT=$JUPYTER_PORT
+METRICS_PORT=1888
+SERVICE_NAME="Jupyter ${JUPYTER_MODE^}"
 
-if [[ $CF_QUICK_TUNNELS = "true" ]]; then
-    cloudflared tunnel --url localhost:${JUPYTER_PORT} > /var/log/supervisor/quicktunnel-jupyter.log 2>&1 &
-fi
+printf "{\"port\": \"$PORT\", \"metrics_port\": \"$METRICS_PORT\", \"service_name\": \"$SERVICE_NAME\"}" > /run/http_ports/$PORT
+
+printf "Starting Jupyter %s...\n" ${JUPYTER_MODE^}
 
 micromamba run -n jupyter jupyter \
     $JUPYTER_MODE \
@@ -35,3 +42,4 @@ micromamba run -n jupyter jupyter \
     --ServerApp.root_dir=$WORKSPACE \
     --ServerApp.preferred_dir=$WORKSPACE \
     --KernelSpecManager.ensure_native_kernel=False
+

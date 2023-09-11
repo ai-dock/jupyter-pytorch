@@ -48,6 +48,10 @@ services:
     ports:
         # SSH available on host machine port 2222 to avoid conflict. Change to suit
         - ${SSH_PORT_HOST}:${SSH_PORT}
+        # Web UI for easy service access
+        - ${REDIRECTOR_PORT_HOST}:1111
+        # Websocket log viewer
+        - ${LOG_VIEWER_PORT_HOST}:1122
         # Jupyter server
         - ${JUPYTER_PORT_HOST}:${JUPYTER_PORT}
         # Rclone webserver for interactive configuration

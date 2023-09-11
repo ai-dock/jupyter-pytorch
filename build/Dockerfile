@@ -9,6 +9,7 @@ LABEL org.opencontainers.image.description "Jupyter with Python kernels and pyto
 
 LABEL maintainer="Rob Ballantyne <rob@dynamedia.uk>"
 
+ENV IMAGE_SLUG="jupyter-pytorch"
 # Note: the default mamba environment is set by ai-dock/python
 
 # Add new paths at front 
