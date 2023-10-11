@@ -60,10 +60,13 @@ services:
     environment:
         # Don't enclose values in quotes
         - JUPYTER_PORT=${JUPYTER_PORT}
-        - JUPYTER_TOKEN=${JUPYTER_TOKEN}
         # Allows running true SSH alongside provider proxy SSH
         - SSH_PORT=${SSH_PORT}
         - WORKSPACE=${WORKSPACE}
+        - WORKSPACE_SYNC=${WORKSPACE_SYNC}
         - CF_TUNNEL_TOKEN=${CF_TUNNEL_TOKEN}
         - CF_QUICK_TUNNELS=${CF_QUICK_TUNNELS}
+        - WEB_ENABLE_AUTH=${WEB_ENABLE_AUTH}
+        - WEB_USER=${WEB_USER}
+        - WEB_PASSWORD=${WEB_PASSWORD}
         #- PROVISIONING_SCRIPT=https://raw.githubusercontent.com/ai-dock/jupyter-pytorch/main/config/provisioning/default.sh
