@@ -2,8 +2,8 @@
 
 trap cleanup EXIT
 
-LISTEN_PORT=1888
-METRICS_PORT=1988
+LISTEN_PORT=18888
+METRICS_PORT=28888
 PROXY_SECURE=true
 
 function cleanup() {
@@ -22,7 +22,7 @@ fi
 PROXY_PORT=$JUPYTER_PORT
 SERVICE_NAME="Jupyter ${JUPYTER_MODE^}"
 
-file_content=$(
+file_content="$(
   jq --null-input \
     --arg listen_port "${LISTEN_PORT}" \
     --arg metrics_port "${METRICS_PORT}" \
@@ -30,12 +30,14 @@ file_content=$(
     --arg proxy_secure "${PROXY_SECURE,,}" \
     --arg service_name "${SERVICE_NAME}" \
     '$ARGS.named'
-)
+)"
 
-printf "%s" $file_content > /run/http_ports/$PROXY_PORT
+printf "%s" "$file_content" > /run/http_ports/$PROXY_PORT
 
 # Delay launch until micromamba is ready
 if [[ -f /run/workspace_moving ]]; then
+    kill -9 $(lsof -t -i:$LISTEN_PORT) > /dev/null 2>&1 &
+    wait -n
     /usr/bin/python3 /opt/ai-dock/fastapi/logviewer/main.py \
         -p $LISTEN_PORT \
         -r 5 \
