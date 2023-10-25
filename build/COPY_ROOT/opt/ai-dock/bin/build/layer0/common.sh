@@ -11,7 +11,7 @@ main() {
 }
 
 install_jupyter() {
-    $MAMBA_CREATE -n jupyter -c conda-forge python=${MAMBA_BASE_PYTHON_VERSION}
+    $MAMBA_CREATE -n jupyter -c conda-forge python=3.10
     micromamba -n jupyter install -c conda-forge -y \
         jupyter \
         jupyterlab \

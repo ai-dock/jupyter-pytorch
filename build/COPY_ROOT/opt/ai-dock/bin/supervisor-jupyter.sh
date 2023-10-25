@@ -41,30 +41,27 @@ function start() {
     printf "%s" "$file_content" > /run/http_ports/$PROXY_PORT
     
     # Delay launch until micromamba is ready
-    if [[ -f /run/workspace_moving ]]; then
+    if [[ -f /run/workspace_sync ]]; then
+        printf "Waiting for workspace sync...\n"
         /usr/bin/python3 /opt/ai-dock/fastapi/logviewer/main.py \
             -p $LISTEN_PORT \
-            -r 5 \
+            -r 3 \
             -s "${SERVICE_NAME}" \
             -t "Preparing ${SERVICE_NAME}" &
         fastapi_pid=$!
         
-        while [[ -f /run/workspace_moving ]]; do
+        while [[ -f /run/workspace_sync ]]; do
             sleep 1
         done
         
-        printf "\nStarting %s... " ${SERVICE_NAME:-service}
         kill $fastapi_pid &
         wait -n
-        printf "OK\n"
-    else
-        printf "Starting %s...\n" ${SERVICE_NAME}
     fi
     
     kill -9 $(lsof -t -i:$LISTEN_PORT) > /dev/null 2>&1 &
     wait -n
     
-    printf "Starting Jupyter %s...\n" ${JUPYTER_MODE^}
+    printf "\nStarting %s...\n" "${SERVICE_NAME:-service}"
     
     micromamba run -n jupyter jupyter \
         $JUPYTER_MODE \
