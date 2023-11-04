@@ -13,7 +13,7 @@ function cleanup() {
 
 function start() {
     if [[ -z $JUPYTER_MODE || ! "$JUPYTER_MODE" = "notebook" ]]; then
-        JUPYTER_MODE="lab"
+        JUPYTER_MODE="notebook"
     fi
     
     if [[ -z $JUPYTER_PORT ]]; then
@@ -25,7 +25,7 @@ function start() {
     
     if [[ ${SERVERLESS,,} = "true" ]]; then
         printf "Refusing to start $SERVICE_NAME service in serverless mode\n"
-        exit 0
+        exec sleep 10
     fi
     
     file_content="$(
@@ -58,12 +58,12 @@ function start() {
         wait -n
     fi
     
-    kill -9 $(lsof -t -i:$LISTEN_PORT) > /dev/null 2>&1 &
+    kill $(lsof -t -i:$LISTEN_PORT) > /dev/null 2>&1 &
     wait -n
     
     printf "\nStarting %s...\n" "${SERVICE_NAME:-service}"
     
-    micromamba run -n jupyter jupyter \
+    exec micromamba run -n jupyter jupyter \
         $JUPYTER_MODE \
         --allow-root \
         --ip=127.0.0.1 \
