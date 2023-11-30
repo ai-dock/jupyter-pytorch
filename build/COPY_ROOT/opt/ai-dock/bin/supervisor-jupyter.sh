@@ -2,25 +2,28 @@
 
 trap cleanup EXIT
 
-LISTEN_PORT=18888
-METRICS_PORT=28888
-PROXY_SECURE=true
-
 function cleanup() {
     kill $(jobs -p) > /dev/null 2>&1
     rm /run/http_ports/$PROXY_PORT > /dev/null 2>&1
 }
 
 function start() {
-    if [[ -z $JUPYTER_MODE || ! "$JUPYTER_MODE" = "notebook" ]]; then
+    LISTEN_PORT=${JUPYTER_PORT_LOCAL:-18888}
+    METRICS_PORT=${JUPYTER_METRICS_PORT:-28888}
+    PROXY_SECURE=true
+    
+    if [[ ! -v JUPYTER_PORT || -z $JUPYTER_PORT ]]; then
+        JUPYTER_PORT=${JUPYTER_PORT_HOST:-8888}
+    fi
+    PROXY_PORT=$JUPYTER_PORT
+    
+    if [[ ! -v JUPYTER_MODE || -z $JUPYTER_MODE ]]; then
         JUPYTER_MODE="notebook"
     fi
-    
-    if [[ -z $JUPYTER_PORT ]]; then
-        JUPYTER_PORT=8888
+    if [[ $JUPYTER_MODE != "notebook" ]]; then
+        JUPYTER_MODE="lab"
     fi
     
-    PROXY_PORT=$JUPYTER_PORT
     SERVICE_NAME="Jupyter ${JUPYTER_MODE^}"
     
     if [[ ${SERVERLESS,,} = "true" ]]; then
@@ -78,7 +81,7 @@ function start() {
         --ServerApp.allow_credentials=True \
         --ServerApp.root_dir=$WORKSPACE \
         --ServerApp.preferred_dir=$WORKSPACE \
-       --KernelSpecManager.ensure_native_kernel=False
+        --KernelSpecManager.ensure_native_kernel=False
 }
 
 start 2>&1

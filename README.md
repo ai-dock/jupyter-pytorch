@@ -62,6 +62,11 @@ It is a good idea to leave the source tree alone and copy any edits you would li
 
 As this overlaying happens after the main build, it is easy to add extra files such as ML models and datasets to your images. You will also be able to rebuild quickly if your file overrides are made here.
 
+Any directories and files that you add into `opt/storage` will be made available in the running container at `$WORKSPACE/storage`.  
+
+This directory is monitored by `inotifywait`. Any items appearing in this directory will be automatically linked to the application directories as defined in `/opt/ai-dock/storage_monitor/etc/mappings.sh`.  This is particularly useful if you need to run several applications that each need to make use of the stored files.
+
+
 ## Run Locally
 
 A 'feature-complete' `docker-compose.yaml` file is included for your convenience. All features of the image are included - Simply edit the environment variables in `.env`, save and then type `docker compose up`.
@@ -134,7 +139,7 @@ You can use the included `cloudflared` service to make secure connections withou
 | `PROVISIONING_SCRIPT`    | URL of a remote script to execute on init. See [note](#provisioning-script). |
 | `RCLONE_*`               | Rclone configuration - See [rclone documentation](https://rclone.org/docs/#config-file) |
 | `SKIP_ACL`               | Set `true` to skip modifying workspace ACL |
-| `SSH_PORT`               | Set a non-standard port for SSH (default `22`) |
+| `SSH_PORT_LOCAL`         | Set a non-standard port for SSH (default `22`) |
 | `SSH_PUBKEY`             | Your public key for SSH |
 | `WEB_ENABLE_AUTH`        | Enable password protection for web services (default `true`) |
 | `WEB_USER`               | Username for web services (default `user`) |
@@ -174,7 +179,7 @@ The URL must point to a plain text file - GitHub Gists/Pastebin (raw) are suitab
 If you are running locally you may instead opt to mount a script at `/opt/ai-dock/bin/provisioning.sh`.
 
 >[!NOTE]  
->If configured, `sshd`, `cloudflared`, `rclone` & `logtail` will be launched before provisioning; Any other processes will launch after.
+>If configured, `sshd`, `caddy`, `cloudflared`, `rclone`, `jupyter`, `serviceportal`, `storagemonitor` & `logtail` will be launched before provisioning; Any other processes will launch after.
 
 >[!WARNING]  
 >Only use scripts that you trust and which cannot be changed without your consent.
@@ -344,6 +349,10 @@ This script follows and prints the log files for each of the above services to s
 
 If you are logged into the container you can follow the logs by running `logtail.sh` in your shell.
 
+### Storage Monitor
+
+This service detects changes to files in `$WORKSPACE/storage` and creates symbolic links to the application directories defined in `/opt/ai-dock/storage_monitor/etc/mappings.sh`
+
 ## Open Ports
 
 Some ports need to be exposed for the services to run or for certain features of the provided software to function
@@ -376,7 +385,7 @@ Some ports need to be exposed for the services to run or for certain features of
 - Select `Advanced options`
 - In Container Name enter `ghcr.io/ai-dock/jupyter-pytorch:latest`
 - In Registry Username enter `x` (Paperspace bug)
-- In Command enter `init.sh WORKSPACE=/notebooks`
+- In Command enter `init.sh WORKSPACE=/notebooks CF_QUICK_TUNNELS=true TUNNEL_TRANSPORT_PROTOCOL=http2 WEB_USER=user WEB_PASSWORD=password`
 
 >[!WARNING]  
 >Do not attempt to use tunnels to circumvent Paperspace restrictions (eg. SSH & private networking) - You will lose your account.
