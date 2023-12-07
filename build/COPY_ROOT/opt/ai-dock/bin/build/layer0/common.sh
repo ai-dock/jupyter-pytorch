@@ -11,7 +11,7 @@ main() {
 }
 
 install_jupyter() {
-    $MAMBA_CREATE -n jupyter -c conda-forge python=3.10
+    $MAMBA_CREATE -n jupyter -c defaults python=3.10
     micromamba -n jupyter install -c conda-forge -y \
         jupyter \
         jupyterlab \
@@ -22,7 +22,7 @@ install_jupyter() {
 }
 
 do_mamba_install() {
-        $MAMBA_INSTALL -n "$1" -c conda-forge -c defaults -y \
+        $MAMBA_INSTALL -n "$1" -c defaults -y \
             ipykernel \
             ipywidgets
 }
@@ -52,26 +52,6 @@ install_ipykernel() {
         do_kernel_install "${PYTHON_MAMBA_NAME}" "${PYTHON_VERSION}" "python${major}" "Python${major} (ipykernel)"
     else
         # Multi Python - Use $PYTHON_MAMBA_NAME as default kernel
-        do_mamba_install "python_27"
-        if [[ $PYTHON_MAMBA_NAME = "python_27" ]]; then
-            do_kernel_install "python_27" "2.7" "python2" "Python2 (ipykernel)"
-        else
-            do_kernel_install "python_27" "2.7"
-        fi
-        
-        do_mamba_install "python_38"
-        if [[ $PYTHON_MAMBA_NAME = "python_38" ]]; then
-            do_kernel_install "python_38" "3.8" "python3" "Python3 (ipykernel)"
-        else
-            do_kernel_install "python_38" "3.8"
-        fi
-        
-        do_mamba_install "python_39"
-        if [[ $PYTHON_MAMBA_NAME = "python_39" ]]; then
-            do_kernel_install "python_39" "3.9" "python3" "Python3 (ipykernel)"
-        else
-            do_kernel_install "python_39" "3.9"
-        fi
         
         do_mamba_install "python_310"
         if [[ $PYTHON_MAMBA_NAME = "python_310" ]]; then
@@ -85,6 +65,13 @@ install_ipykernel() {
             do_kernel_install "python_311" "3.11" "python3" "Python3 (ipykernel)"
         else
             do_kernel_install "python_311" "3.11"
+        fi
+        
+        do_mamba_install "python_312"
+        if [[ $PYTHON_MAMBA_NAME = "python_312" ]]; then
+            do_kernel_install "python_312" "3.12" "python3" "Python3 (ipykernel)"
+        else
+            do_kernel_install "python_312" "3.12"
         fi
     fi
 }
