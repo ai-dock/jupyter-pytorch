@@ -12,7 +12,7 @@ main() {
 
 install_jupyter() {
     $MAMBA_CREATE -n jupyter -c defaults python=3.10
-    micromamba -n jupyter install -c conda-forge -y \
+    micromamba -n jupyter install -c defaults -y \
         jupyter \
         jupyterlab \
         nodejs=18
