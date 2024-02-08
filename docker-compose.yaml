@@ -20,33 +20,13 @@ services:
     #          count: all
     #          capabilities: [gpu]
     
-    security_opt:
-      # For Rclone mount
-      - apparmor:unconfined
-      # For AMD GPU
-      #- seccomp:unconfined
-    
-    cap_add:
-      # For Rclone mount
-      - SYS_ADMIN
     
     devices:
-      # For Rclone mount
-      - "/dev/fuse:/dev/fuse"
+      - "/dev/dri:/dev/dri"
       # For AMD GPU
       #- "/dev/kfd:/dev/kfd"
-      #- "/dev/dri:/dev/dri"
       
-    # For AMD GPU
-    #group_add:
-    #  - video
-    #  - render
-    
     volumes:
-      # For Rclone mount
-      - /etc/passwd:/etc/passwd:ro
-      - /etc/group:/etc/group:ro
-      - ./config/rclone:/etc/rclone
       # Workspace
       - ./workspace:${WORKSPACE:-/workspace}:rshared
       # Will echo to root-owned authorized_keys file;
@@ -56,7 +36,7 @@ services:
     
     ports:
         # SSH available on host machine port 2222 to avoid conflict. Change to suit
-        - ${SSH_PORT_HOST:-2222}:${SSH_PORT_LOCAL:-22}
+        - ${SSH_PORT_HOST:-2222}:22
         # Caddy port for service portal
         - ${SERVICEPORTAL_PORT_HOST:-1111}:${SERVICEPORTAL_PORT_HOST:-1111}
         # Jupyter server
@@ -69,19 +49,16 @@ services:
         - DIRECT_ADDRESS=${DIRECT_ADDRESS:-127.0.0.1}
         - DIRECT_ADDRESS_GET_WAN=${DIRECT_ADDRESS_GET_WAN:-false}
         - WORKSPACE=${WORKSPACE:-/workspace}
-        - WORKSPACE_SYNC=${WORKSPACE_SYNC:-true}
+        - WORKSPACE_SYNC=${WORKSPACE_SYNC:-false}
         - CF_TUNNEL_TOKEN=${CF_TUNNEL_TOKEN:-}
         - CF_QUICK_TUNNELS=${CF_QUICK_TUNNELS:-true}
         - WEB_ENABLE_AUTH=${WEB_ENABLE_AUTH:-true}
         - WEB_USER=${WEB_USER:-user}
         - WEB_PASSWORD=${WEB_PASSWORD:-password}
         - SSH_PORT_HOST=${SSH_PORT_HOST:-2222}
-        - SSH_PORT_LOCAL=${SSH_PORT_LOCAL:-22}
         - SERVICEPORTAL_PORT_HOST=${SERVICEPORTAL_PORT_HOST:-1111}
-        - SERVICEPORTAL_PORT_LOCAL=${SERVICEPORTAL_PORT_LOCAL:-11111}
         - SERVICEPORTAL_METRICS_PORT=${SERVICEPORTAL_METRICS_PORT:-21111}
         - JUPYTER_PORT_HOST=${JUPYTER_PORT_HOST:-8888}
-        - JUPYTER_PORT_LOCAL=${JUPYTER_PORT_LOCAL:-18888}
         - JUPYTER_METRICS_PORT=${JUPYTER_METRICS_PORT:-28888}
         - SERVERLESS=${SERVERLESS:-false}
         #- PROVISIONING_SCRIPT=https://raw.githubusercontent.com/ai-dock/jupyter-pytorch/main/config/provisioning/default.sh

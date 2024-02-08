@@ -10,17 +10,18 @@ build_common_main() {
 
 build_common_install_jupyter() {
     $MAMBA_CREATE -n jupyter python=3.10
+    printf "/opt/micromamba/envs/jupyter/lib\n" >> /etc/ld.so.conf.d/x86_64-linux-gnu.micromamba.90-jupyter.conf
     $MAMBA_INSTALL -n jupyter \
         jupyter \
         jupyterlab \
-        nodejs=18
+        nodejs=20
     # This must remain clean. User software should not be in this environment
     printf "Removing default ipython kernel...\n"
     rm -rf /opt/micromamba/envs/jupyter/share/jupyter/kernels/python3
 }
 
 build_common_do_mamba_install() {
-        $MAMBA_INSTALL -n "$1" -y \
+        $MAMBA_INSTALL -n "$1" \
             ipykernel \
             ipywidgets
 }
@@ -31,7 +32,7 @@ build_common_do_kernel_install() {
         dir="${kernel_path}${3}/"
         file="${dir}kernel.json"
         cp -rf ${kernel_path}../_template ${dir}
-         
+            
         sed -i 's/DISPLAY_NAME/'"$4"'/g' ${file}
         sed -i 's/PYTHON_MAMBA_NAME/'"$1"'/g' ${file}
     fi
@@ -58,11 +59,18 @@ build_common_install_ipykernel() {
             build_common_do_kernel_install "python_310" "3.10"
         fi
         
-        do_mamba_install "python_311"
+        build_common_do_mamba_install "python_311"
         if [[ $PYTHON_MAMBA_NAME = "python_311" ]]; then
             build_common_do_kernel_install "python_311" "3.11" "python3" "Python3 (ipykernel)"
         else
             build_common_do_kernel_install "python_311" "3.11"
+        fi
+        
+        build_common_do_mamba_install "python_312"
+        if [[ $PYTHON_MAMBA_NAME = "python_312" ]]; then
+            build_common_do_kernel_install "python_312" "3.12" "python3" "Python3 (ipykernel)"
+        else
+            build_common_do_kernel_install "python_312" "3.12"
         fi
     fi
 }
