@@ -15,6 +15,9 @@ build_common_install_jupyter() {
         jupyter \
         jupyterlab \
         nodejs=20
+        
+    ln -s /opt/micromamba/envs/jupyter/lib/libuv* /opt/ai-dock/lib/micromamba/
+    
     # This must remain clean. User software should not be in this environment
     printf "Removing default ipython kernel...\n"
     rm -rf /opt/micromamba/envs/jupyter/share/jupyter/kernels/python3
