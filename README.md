@@ -34,17 +34,17 @@ Tags follow these patterns:
 ##### _CUDA_
 - `:[pytorch-version]-py[python-version]-cuda-[x.x.x]-base-[ubuntu-version]`
 
-- `:latest-cuda` &rarr; `:2.2.0-py3.12-cuda-12.1.0-base-22.04`
+- `:latest-cuda` &rarr; `:2.2.1-py3.12-cuda-12.1.0-base-22.04`
 
 ##### _ROCm_
 - `:[pytorch-version]-py[python-version]-rocm-[x.x.x]-runtime-[ubuntu-version]`
 
-- `:latest-rocm` &rarr; `:2.2.0-py3.12-rocm-5.7-runtime-22.04`
+- `:latest-rocm` &rarr; `:2.2.1-py3.12-rocm-5.7-runtime-22.04`
 
 ##### _CPU_
 - `:[pytorch-version]-py[python-version]-ubuntu-[ubuntu-version]`
 
-- `:latest-cpu` &rarr; `:2.2.0-py3.12-cpu-22.04` 
+- `:latest-cpu` &rarr; `:2.2.1-py3.12-cpu-22.04` 
 
 Browse [here](https://github.com/ai-dock/jupyter-pytorch/pkgs/container/jupyter-pytorch) for an image suitable for your target environment.
 
