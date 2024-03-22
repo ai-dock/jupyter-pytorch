@@ -13,7 +13,7 @@ function start() {
 
     LISTEN_PORT=18888
     METRICS_PORT=${JUPYTER_METRICS_PORT:-28888}
-    PROXY_SECURE=true
+    SERVICE_URL="${JUPYTER_URL:-}"
     QUICKTUNNELS=true
     
     if [[ ! -v JUPYTER_PORT || -z $JUPYTER_PORT ]]; then
@@ -42,6 +42,7 @@ function start() {
         --arg proxy_port "${PROXY_PORT}" \
         --arg proxy_secure "${PROXY_SECURE,,}" \
         --arg service_name "${SERVICE_NAME}" \
+        --arg service_url "${SERVICE_URL}" \
         '$ARGS.named'
     )"
     
